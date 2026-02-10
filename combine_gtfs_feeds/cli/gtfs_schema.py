@@ -1,9 +1,9 @@
-from platform import platform
+from typing import Optional
+
+import pandas as pd
+import pandera.pandas as pa
 from numpy import float64
 from pandera.typing import Series
-from typing import Optional
-import pandera as pa
-import pandas as pd
 
 
 class GTFS_Schema(object):

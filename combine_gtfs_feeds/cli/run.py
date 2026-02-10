@@ -110,10 +110,10 @@ def add_run_args(parser, multiprocess=True):
         type=int,
         metavar="SERVICEDATE",
         help=(
-            "date for service in yyyymmdd integer format                      "
-            " (default: %s)"
-        )
-        % os.getcwd(),
+                 "date for service in yyyymmdd integer format                      "
+                 " (default: %s)"
+             )
+             % os.getcwd(),
     )
 
     parser.add_argument(
@@ -126,10 +126,10 @@ def add_run_args(parser, multiprocess=True):
 
 
 def get_service_ids(
-    calendar: pd.DataFrame,
-    calendar_dates: pd.DataFrame,
-    day_of_week: str,
-    service_date: int,
+        calendar: pd.DataFrame,
+        calendar_dates: pd.DataFrame,
+        day_of_week: str,
+        service_date: int,
 ) -> list:
     """
     Returns a list of valid service_id(s) from each feed
@@ -141,7 +141,7 @@ def get_service_ids(
             (calendar["start_date"] <= service_date)
             & (calendar["end_date"] >= service_date)
             & (calendar[day_of_week] == 1)
-        ]["service_id"].tolist()
+            ]["service_id"].tolist()
     else:
         regular_service_dates = []
 
@@ -249,7 +249,7 @@ def interpolate_arrival_departure_time(stop_times: pd.DataFrame) -> pd.DataFrame
 
 
 def frequencies_to_trips(
-    frequencies: pd.DataFrame, trips: pd.DataFrame, stop_times: pd.DataFrame
+        frequencies: pd.DataFrame, trips: pd.DataFrame, stop_times: pd.DataFrame
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     For each trip_id in frequencies.txt, calculates the number
@@ -279,8 +279,8 @@ def frequencies_to_trips(
 
     frequencies["total_trips"] = (
         (
-            (frequencies["end_time_secs"] - frequencies["start_time_secs"])
-            / frequencies["headway_secs"]
+                (frequencies["end_time_secs"] - frequencies["start_time_secs"])
+                / frequencies["headway_secs"]
         )
         .round(0)
         .astype(int)
@@ -292,7 +292,7 @@ def frequencies_to_trips(
     ].reset_index(drop=True)
     trips_update["counter"] = trips_update.groupby("trip_id").cumcount() + 1
     trips_update["trip_id"] = (
-        trips_update["trip_id"].astype(str) + "_" + trips_update["counter"].astype(str)
+            trips_update["trip_id"].astype(str) + "_" + trips_update["counter"].astype(str)
     )
 
     stop_times_update = frequencies.merge(stop_times, on="trip_id", how="left")
@@ -307,15 +307,15 @@ def frequencies_to_trips(
         ["trip_id", "start_time"]
     )["arrival_time_secs"].transform("first")
     stop_times_update["elapsed_time"] = (
-        stop_times_update["arrival_time_secs"] - stop_times_update["elapsed_time"]
+            stop_times_update["arrival_time_secs"] - stop_times_update["elapsed_time"]
     )
     stop_times_update["arrival_time_secs"] = (
-        stop_times_update["start_time_secs"] + stop_times_update["elapsed_time"]
+            stop_times_update["start_time_secs"] + stop_times_update["elapsed_time"]
     )
 
     # for now assume departure time is the same as arrival time.
     stop_times_update["departure_time_secs"] = (
-        stop_times_update["start_time_secs"] + stop_times_update["elapsed_time"]
+            stop_times_update["start_time_secs"] + stop_times_update["elapsed_time"]
     )
 
     stop_times_update = stop_times_update.loc[
@@ -326,15 +326,15 @@ def frequencies_to_trips(
         ["frequency_id", "stop_id"]
     ).cumcount()
     stop_times_update["departure_time_secs"] = stop_times_update[
-        "departure_time_secs"
-    ] + (stop_times_update["counter"] * stop_times_update["headway_secs"])
+                                                   "departure_time_secs"
+                                               ] + (stop_times_update["counter"] * stop_times_update["headway_secs"])
     stop_times_update["arrival_time_secs"] = stop_times_update["arrival_time_secs"] + (
-        stop_times_update["counter"] * stop_times_update["headway_secs"]
+            stop_times_update["counter"] * stop_times_update["headway_secs"]
     )
 
     # now we want to get the cumcount based on trip_id
     stop_times_update["counter"] = (
-        stop_times_update.groupby(["trip_id", "stop_id"]).cumcount() + 1
+            stop_times_update.groupby(["trip_id", "stop_id"]).cumcount() + 1
     )
     stop_times_update["departure_time"] = stop_times_update[
         "departure_time_secs"
@@ -345,9 +345,9 @@ def frequencies_to_trips(
     )
 
     stop_times_update["trip_id"] = (
-        stop_times_update["trip_id"].astype(str)
-        + "_"
-        + stop_times_update["counter"].astype(str)
+            stop_times_update["trip_id"].astype(str)
+            + "_"
+            + stop_times_update["counter"].astype(str)
     )
 
     # remove trip_ids that are in frequencies
@@ -367,7 +367,7 @@ def frequencies_to_trips(
 
 
 def get_schedule_pattern(
-    merged_stops_times: pd.DataFrame, route_field="route_id"
+        merged_stops_times: pd.DataFrame, route_field="route_id"
 ) -> dict:
     """
     Returns a nested diciontary where the first level key is route_id and
@@ -435,7 +435,7 @@ def get_schedule_pattern_df(schedule_pattern_dict: dict) -> pd.DataFrame:
 
 
 def shapes_from_stops_sequence(
-    stops: pd.DataFrame, stop_times: pd.DataFrame, trips: pd.DataFrame
+        stops: pd.DataFrame, stop_times: pd.DataFrame, trips: pd.DataFrame
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Used when shapes.txt is missing. Creates a new shapes.txt file
@@ -473,12 +473,12 @@ def shapes_from_stops_sequence(
 
 
 def read_gtfs(
-    path: Path,
-    gtfs_file_name: str,
-    is_zipped: bool,
-    feed_name: str,
-    logger: log_controller.logging.Logger,
-    empty_df_cols=[],
+        path: Path,
+        gtfs_file_name: str,
+        is_zipped: bool,
+        feed_name: str,
+        logger: log_controller.logging.Logger,
+        empty_df_cols=[],
 ) -> pd.DataFrame:
     """
     Reads in a GTFS file and returns a DataFrame.
@@ -488,7 +488,7 @@ def read_gtfs(
         zf = zipfile.ZipFile(path.with_suffix(".zip"))
         try:
             # df = pd.read_csv(zf.open(gtfs_file_name), dtype_backend="pyarrow")
-            df = pd.read_csv(zf.open(gtfs_file_name))
+            df = pd.read_csv(zf.open(gtfs_file_name), dtype={"block_id": str})
             if df.empty:
                 if feed_name in GTFS_Schema.required_files:
                     logger(

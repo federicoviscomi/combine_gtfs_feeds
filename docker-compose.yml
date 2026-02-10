@@ -1,0 +1,14 @@
+services:
+  gtfs-compare:
+    build: .
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+      - type: bind
+        source: ./output
+        target: /output
+    stdin_open: true
+    tty: true
+
+

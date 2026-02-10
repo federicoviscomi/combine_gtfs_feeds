@@ -1,10 +1,8 @@
 import sys
 
-from combine_gtfs_feeds.cli import CLI # type: ignore
-from combine_gtfs_feeds.cli import run # type: ignore
-
-
 from combine_gtfs_feeds import __version__, __doc__
+from combine_gtfs_feeds.cli import CLI  # type: ignore
+from combine_gtfs_feeds.cli import run  # type: ignore
 
 
 def main():
@@ -17,3 +15,7 @@ def main():
     )
 
     sys.exit(combine.execute())
+
+
+if __name__ == "__main__":
+    main()

@@ -1,11 +1,7 @@
-import logging
-from functools import wraps
-from time import time
 import datetime
-import os, sys, errno
-import yaml
-import shutil
-from shutil import copy2 as shcopy
+import logging
+import os
+from functools import wraps
 
 
 def setup_custom_logger(name, output_dir):
