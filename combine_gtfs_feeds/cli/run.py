@@ -489,6 +489,9 @@ def read_gtfs(
         try:
             # df = pd.read_csv(zf.open(gtfs_file_name), dtype_backend="pyarrow")
             print("reading ", path, gtfs_file_name)
+            info = zf.getinfo(gtfs_file_name)
+            print("Compressed:", info.compress_size / 1e6, "MB")
+            print("Uncompressed:", info.file_size / 1e6, "MB")
             df = pd.read_csv(zf.open(gtfs_file_name), dtype={"block_id": str}, on_bad_lines='warn')
             print("read ok:", len(df), "rows,", len(df.columns), "columns")
             if df.empty:
