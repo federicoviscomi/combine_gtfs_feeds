@@ -489,7 +489,8 @@ def read_gtfs(
         try:
             # df = pd.read_csv(zf.open(gtfs_file_name), dtype_backend="pyarrow")
             print("reading ", path, gtfs_file_name)
-            df = pd.read_csv(zf.open(gtfs_file_name), dtype={"block_id": str}, on_bad_lines='skip')
+            df = pd.read_csv(zf.open(gtfs_file_name), dtype={"block_id": str}, on_bad_lines='warn')
+            print("read ok:", len(df), "rows,", len(df.columns), "columns")
             if df.empty:
                 if feed_name in GTFS_Schema.required_files:
                     logger(
@@ -514,7 +515,7 @@ def read_gtfs(
     else:
         try:
             # df = pd.read_csv(path / gtfs_file_name, dtype_backend="pyarrow")
-            df = pd.read_csv(path / gtfs_file_name)
+            df = pd.read_csv(path / gtfs_file_name, dtype={"block_id": str}, on_bad_lines='warn')
             if df.empty:
                 if feed_name in GTFS_Schema.required_files:
                     logger.info(
